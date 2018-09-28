@@ -28,13 +28,11 @@ C语言代码是以文件为单位来组织的，在一个源程序的所有源�
 以下是一些示例程序
 
 file1.h如下：
-
     #include <stdio.h>
     void printStr();
  
 
 我们在file1.c中定义一个静态全局变量hello, 供file1.c中的函数printStr访问.
-
     #include "file1.h"
     static char* hello = "hello cobing!";
     void printStr()
@@ -44,7 +42,6 @@ file1.h如下：
 
 
 file2.c是我们的主程序所在文件，file2.c中如果引用hello会编译出错
-
     #include "file1.h"
     int main()
     {
@@ -54,7 +51,6 @@ file2.c是我们的主程序所在文件，file2.c中如果引用hello会编译�
     }
 
 报错如下：
-
 [liujx@server235 static]$ gcc -Wall file2.c file1.c -o file2
 file2.c: In function ‘main’:
 file2.c:6: 错误：‘hello’ 未声明 (在此函数内第一次使用)
@@ -63,7 +59,6 @@ file2.c:6: 错误：所在的函数内只报告一次。)
  
 
 如果我们将file2.c改为下面的形式：
-
     #include "file1.h"
     int main()
     {
@@ -102,30 +97,27 @@ hello cobing!
 file1.h的内容和上例中的相同，
 
 file1.c的内容如下：
-#include "file1.h"
-void printStr()
-{
-        int normal = 0;
-        static int stat = 0;        //this is a static local var
-        printf("normal = %d ---- stat = %d\n",normal, stat);
-        normal++;
-        stat++;
-}
-
-
+      #include "file1.h"
+      void printStr()
+      {
+              int normal = 0;
+              static int stat = 0;        //this is a static local var
+              printf("normal = %d ---- stat = %d\n",normal, stat);
+              normal++;
+              stat++;
+      }
 为了便于比较，我定义了两个变量：普通局部变量normal和静态局部变量stat，它们都被赋予初值0；
 
 file2.c中调用file1.h：
-
     #include "file1.h"
     int main()
     {
-    printStr();
-    printStr();
-    printStr();
-    printStr();
-    printf("call stat in main: %d\n",stat);
-    return 0;
+            printStr();
+            printStr();
+            printStr();
+            printStr();
+            printf("call stat in main: %d\n",stat);
+            return 0;
     }
 
 
@@ -138,19 +130,16 @@ file2.c:9: 错误：(即使在一个函数内多次出现，每个未声明的�
 file2.c:9: 错误：所在的函数内只报告一次。)
 
 编译器说stat未声明，这是因为它看不到file1.c中的stat，下面注掉这一行：
-
-#include "file1.h"
-int main()
-{
-        printStr();
-        printStr();
-        printStr();
-        printStr();
-//        printf("call stat in main: %d\n",stat);
-        return 0;
-}
-
-
+   #include "file1.h"
+   int main()
+   {
+           printStr();
+           printStr();
+           printStr();
+           printStr();
+           //printf("call stat in main: %d\n",stat);
+           return 0;
+   }
 
 liujx@server235 static]$ gcc -Wall file2.c file1.c -o file2
 [liujx@server235 static]$ ./file2
@@ -174,37 +163,33 @@ normal = 0 ---- stat = 3
 
 下面是一些示例：
 file1.h如下：
-
-    #include <stdio.h>
-    static int called();
-    void printStr();
-
+   #include <stdio.h>
+   static int called();
+   void printStr();
 
 file1.c如下：
-
-    #include "file1.h"
-    static int called()
-    {
-            return 6;
-    }
-    void printStr()
-    {
-            int returnVal;
-            returnVal = called();
-            printf("returnVal=%d\n",returnVal);
-    }
+   #include "file1.h"
+   static int called()
+   {
+         return 6;
+   }
+   void printStr()
+   {
+         int returnVal;
+         returnVal = called();
+         printf("returnVal=%d\n",returnVal);
+   }
  
 
 file2.c中调用file1.h中声明的两个函数，此处我们故意调用called():
-
-#include "file1.h"
-int main()
-{
-        int val;
-        val = called();
-        printStr();
-        return 0;
-}
+   #include "file1.h"
+   int main()
+   {
+           int val;
+           val = called();
+           printStr();
+           return 0;
+   }
 
 [liujx@server235 static]$ gcc -Wall file2.c file1.c -o file2
 file1.h:3: 警告：‘called’ 使用过但从未定义
@@ -214,17 +199,14 @@ collect2: ld 返回 1
 因为引用了file1.h中的static函数，所以file2.c中提示找不到这个函数:undefined reference to 'called'
 
 下面修改file2.c:
-
-    #include "file1.h"
-    int main()
-    {
-            printStr();
-            return 0;
-    }
-
+   #include "file1.h"
+   int main()
+   {
+         printStr();
+         return 0;
+   }
 
 编译运行：
-
 [liujx@server235 static]$ gcc -Wall file2.c file1.c -o file2
 [liujx@server235 static]$ ./file2
 returnVal=6
