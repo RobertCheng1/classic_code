@@ -37,6 +37,8 @@ int main(int argc,char **argv)
         printf("send mes error: %s errno : %d",strerror(errno),errno);
         exit(0);
     }
+    
+    //The following added by robert@20181214, To give you time to execute netstat -anp cmd in terminal
     sleep(10); 
     close(socketfd);
     
