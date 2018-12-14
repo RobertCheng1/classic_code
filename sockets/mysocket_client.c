@@ -38,7 +38,7 @@ int main(int argc,char **argv)
         exit(0);
     }
     
-    //The following added by robert@20181214, To give you time to execute netstat -anp cmd in terminal
+    // The following added by robert@20181214, To give you time to execute netstat -anp cmd in terminal
     sleep(10); 
     close(socketfd);
     
